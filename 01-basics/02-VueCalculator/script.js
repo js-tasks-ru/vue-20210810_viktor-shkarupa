@@ -12,7 +12,7 @@ const VueCalculator = {
   computed: {
     calculationResult() {
       if (this.operator === 'sum') {
-        return +this.firstOperand + +this.secondOperand;
+        return this.firstOperand + this.secondOperand;
       }
 
       if (this.operator === 'subtract') {
