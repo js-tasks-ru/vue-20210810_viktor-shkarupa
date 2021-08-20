@@ -9,16 +9,15 @@ export default defineComponent({
     },
   },
   emits: ['update:count'],
+  // Компонент должен иметь входной параметр
   methods: {
-    increaseCount(event) {
-      this.$emit('update:count', ++event.target.value);
+    increaseCount() {
+      this.$emit('update:count', this.count + 1);
     },
   },
-
-  // Компонент должен иметь входной параметр
 
   // Шаблон лучше держать максимально простым, а логику выносить в методы
 
   // Шаблон потребуется отредактировать
-  template: `<button :value="count" @click="increaseCount" type="button">{{ count }}</button>`,
+  template: `<button @click="increaseCount" type="button">{{ count }}</button>`,
 });
