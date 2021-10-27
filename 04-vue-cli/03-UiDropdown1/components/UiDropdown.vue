@@ -1,33 +1,38 @@
 <template>
   <div class="dropdown" :class="{ dropdown_opened: isDropdownOpened }">
-    <button type="button" class="dropdown__toggle dropdown__toggle_icon" @click="isDropdownOpened = !isDropdownOpened">
-      <ui-icon icon="tv" class="dropdown__icon" />
+    <button
+      type="button"
+      class="dropdown__toggle"
+      :class="{ dropdown__toggle_icon: hasIcon }"
+      @click="isDropdownOpened = !isDropdownOpened"
+    >
+      <ui-icon :icon="currentIcon" class="dropdown__icon" />
       <span>
-        {{ modelValue || title }}
+        {{ currentTitle || title }}
       </span>
     </button>
 
-    <div class="dropdown__menu" role="listbox" @click="updateModelValue">
+    <div v-show="isDropdownOpened" class="dropdown__menu" role="listbox">
       <button
         v-for="option in options"
         :key="option.value"
-        :value="option.value"
-        class="dropdown__item dropdown__item_icon"
+        class="dropdown__item"
+        :class="{ dropdown__item_icon: hasIcon }"
         role="option"
         type="button"
+        @click="updateModelValue(option.value)"
       >
-        <ui-icon :icon="option.icon" class="dropdown__icon" />
+        <ui-icon :icon="option.icon ? option.icon : ''" class="dropdown__icon" />
 
         {{ option.text }}
       </button>
     </div>
 
-
-<!--    <select v-if="false" id="type">-->
-<!--      <option v-for="option in options" :key="option.value">-->
-<!--        {{ option.text }}-->
-<!--      </option>-->
-<!--    </select>-->
+    <select v-show="true" id="type" :value="modelValue" @click="$emit('update:modelValue', $event.target.value)">
+      <option v-for="option in options" :key="option.value">
+        {{ option.text }}
+      </option>
+    </select>
   </div>
 </template>
 
@@ -63,9 +68,41 @@ export default {
     };
   },
 
+  computed: {
+    hasIcon() {
+      return this.options.find((item) => {
+        return item.icon ? item.icon : '';
+      });
+    },
+
+    currentTitle() {
+      let title = '';
+
+      this.options.forEach((item) => {
+        if (item.value === this.modelValue) {
+          title = item.text;
+        }
+      });
+
+      return title;
+    },
+
+    currentIcon() {
+      let icon = '';
+
+      this.options.forEach((item) => {
+        if (item.value === this.modelValue && item.icon) {
+          icon = item.icon;
+        }
+      });
+
+      return icon;
+    },
+  },
+
   methods: {
-    updateModelValue(event) {
-      this.$emit('update:modelValue', event.target.value);
+    updateModelValue(value) {
+      this.$emit('update:modelValue', value);
       this.isDropdownOpened = false;
     },
   },
