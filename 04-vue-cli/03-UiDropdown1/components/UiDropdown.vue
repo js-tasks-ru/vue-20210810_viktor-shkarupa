@@ -1,20 +1,33 @@
 <template>
-  <div class="dropdown dropdown_opened">
-    <button type="button" class="dropdown__toggle dropdown__toggle_icon">
+  <div class="dropdown" :class="{ dropdown_opened: isDropdownOpened }">
+    <button type="button" class="dropdown__toggle dropdown__toggle_icon" @click="isDropdownOpened = !isDropdownOpened">
       <ui-icon icon="tv" class="dropdown__icon" />
-      <span>Title</span>
+      <span>
+        {{ modelValue || title }}
+      </span>
     </button>
 
-    <div class="dropdown__menu" role="listbox">
-      <button class="dropdown__item dropdown__item_icon" role="option" type="button">
-        <ui-icon icon="tv" class="dropdown__icon" />
-        Option 1
-      </button>
-      <button class="dropdown__item dropdown__item_icon" role="option" type="button">
-        <ui-icon icon="tv" class="dropdown__icon" />
-        Option 2
+    <div class="dropdown__menu" role="listbox" @click="updateModelValue">
+      <button
+        v-for="option in options"
+        :key="option.value"
+        :value="option.value"
+        class="dropdown__item dropdown__item_icon"
+        role="option"
+        type="button"
+      >
+        <ui-icon :icon="option.icon" class="dropdown__icon" />
+
+        {{ option.text }}
       </button>
     </div>
+
+
+<!--    <select v-if="false" id="type">-->
+<!--      <option v-for="option in options" :key="option.value">-->
+<!--        {{ option.text }}-->
+<!--      </option>-->
+<!--    </select>-->
   </div>
 </template>
 
@@ -25,6 +38,37 @@ export default {
   name: 'UiDropdown',
 
   components: { UiIcon },
+
+  props: {
+    options: {
+      type: Array,
+      required: true,
+    },
+
+    modelValue: {
+      type: String,
+    },
+
+    title: {
+      type: String,
+      required: true,
+    },
+  },
+
+  emits: ['update:modelValue'],
+
+  data() {
+    return {
+      isDropdownOpened: false,
+    };
+  },
+
+  methods: {
+    updateModelValue(event) {
+      this.$emit('update:modelValue', event.target.value);
+      this.isDropdownOpened = false;
+    },
+  },
 };
 </script>
 
