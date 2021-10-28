@@ -28,8 +28,8 @@
       </button>
     </div>
 
-    <select v-show="true" id="type" :value="modelValue" @click="$emit('update:modelValue', $event.target.value)">
-      <option v-for="option in options" :key="option.value">
+    <select v-show="false" :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
+      <option v-for="option in options" :key="option.value" :value="option.value">
         {{ option.text }}
       </option>
     </select>
