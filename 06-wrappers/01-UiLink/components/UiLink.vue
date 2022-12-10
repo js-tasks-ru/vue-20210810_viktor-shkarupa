@@ -1,10 +1,14 @@
 <template>
-  <a class="link">Link!</a>
+  <component :is="$attrs.tag !== 'a' ? 'router-link' : 'a'" class="link" v-bind="$attrs">
+    <slot></slot>
+  </component>
 </template>
 
 <script>
 export default {
   name: 'UiLink',
+
+  inheritAttrs: false,
 };
 </script>
 
